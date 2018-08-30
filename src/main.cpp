@@ -3,7 +3,7 @@
 
 #define NUM_LEDS 50
 #define EN1 PB9
-#define EN2 PB4
+#define EN2 PB11
 #define EN3 PA2
 #define EN4 PA3
 #define EN5 PB7
@@ -84,10 +84,6 @@ void setup() {
   pinMode(EN6, OUTPUT);
   pinMode(EN7, OUTPUT);
   pinMode(EN8, OUTPUT);
-  pinMode(BIKE, INPUT_ANALOG);
-  pinMode(PUMP, INPUT_ANALOG);
-  pinMode(NOODLE, INPUT_ANALOG);
-  pinMode(CYMBAL, INPUT_PULLDOWN);
   digitalWrite(EN1, LOW);
   strip.begin();
   strip.show();
@@ -207,16 +203,12 @@ void showColor(int stripEnable, uint8 r, uint8 g, uint8 b, int column) {
     //   strip.setPixelColor(i, mixedColor);
     // }
   }
-  readData();
   strip.show();
+  int startTime = millis();
+  while (millis() - startTime < 3) {
+    readData();
+  }
   digitalWrite(stripEnable, LOW);
-  readData();
-  delay(1);
-  readData();
-  delay(1);
-  readData();
-  delay(1);
-  readData();
 }
 
 void runInteractive() {
@@ -234,8 +226,8 @@ void runInteractive() {
 
   showColor(EN1, 80, 80, 80, 0+offset);
   showColor(EN2, 80, 80, 80, 1+offset);
-  showColor(EN4, 80, 80, 80, 2+offset);
   showColor(EN3, 80, 80, 80, 3+offset);
+  showColor(EN4, 80, 80, 80, 2+offset);
   showColor(EN5, 80, 80, 80, 4+offset);
   showColor(EN6, 80, 80, 80, 5+offset);
   showColor(EN7, 80, 80, 80, 6+offset);
@@ -244,9 +236,10 @@ void runInteractive() {
 
 
 void loop() {
-  if (state==INIT) {
-    readData();
-  } else if (state==ACTIVE) {
     runInteractive();
-  }
+  // if (state==INIT) {
+  //   readData();
+  // } else if (state==ACTIVE) {
+  //   runInteractive();
+  // }
 }
